@@ -2,11 +2,513 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-  padding: 0;
-  margin: 0;
+/* ------------------------------------------------------------------
+   Tokens (declared on :root only, so nothing loses to an html {} rule)
+   ------------------------------------------------------------------ */
+:root {
+  --header-h: 4rem;
+  --navy: #15264f;
+  --navy-deep: #0e1b3b;
+  --navy-raised: #1d3263;
+  --gold: #f6b91c;
+  --gold-deep: #e9a90a;
+  --gold-tint: #fdefc8;
+  --blueprint: #9db2e0;
+  --paper: #f7f5ef;
+  --paper-2: #ede9df;
+  --rule: #cfc9ba;
+  --plan: #7e8baa;
+  --wall: 6px;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-h: 4.5rem;
+    --wall: 8px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+html {
+  /* The single anchor offset. No per-section scroll-margin anywhere. */
+  /* Header height plus its 1px bottom border */
+  scroll-padding-top: calc(var(--header-h) + 1px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  @apply bg-paper font-sans text-navy antialiased;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-stretch: 100%;
 }
 
 * {
   box-sizing: border-box;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 3px;
+}
+
+.on-dark a:focus-visible,
+.on-dark button:focus-visible,
+.on-dark [tabindex]:focus-visible {
+  outline-color: var(--gold);
+}
+
+/* On the gold panels the outline goes back to navy */
+.on-gold a:focus-visible,
+.on-gold button:focus-visible {
+  outline-color: var(--navy);
+}
+
+/* ------------------------------------------------------------------
+   Type and layout primitives
+   ------------------------------------------------------------------ */
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-site px-5 sm:px-8;
+  }
+
+  /* Expanded heavy Archivo: the sign-painter's voice */
+  .display {
+    font-stretch: 125%;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  /* Semi-condensed caps: the drafting annotations on a plan */
+  .label {
+    @apply text-[0.875rem] uppercase leading-tight tracking-label;
+    font-stretch: 85%;
+    font-weight: 650;
+  }
+
+  .measure {
+    max-width: 60ch;
+  }
+
+  .measure-narrow {
+    max-width: 44ch;
+  }
+
+  .btn {
+    @apply inline-flex min-h-[52px] items-center justify-center gap-3 whitespace-nowrap border-2 px-6 py-2 text-[1.0625rem] leading-none transition-colors duration-200 ease-out;
+    font-stretch: 112%;
+    font-weight: 750;
+    border-radius: 3px;
+  }
+
+  /* The call: gold fill, navy label. On light grounds the navy edge carries
+     the control boundary, since gold on paper is only 1.6:1. */
+  .btn-call {
+    @apply btn border-navy bg-gold text-navy hover:bg-gold-deep;
+  }
+
+  .on-dark .btn-call {
+    @apply border-gold;
+  }
+
+  .on-dark .btn-call:hover {
+    @apply border-gold-deep;
+  }
+
+  .btn-ghost {
+    @apply btn border-navy bg-transparent text-navy hover:bg-navy hover:text-paper;
+  }
+
+  .btn-ghost-dark {
+    @apply btn border-paper bg-transparent text-paper hover:bg-paper hover:text-navy;
+  }
+
+  .btn-compact {
+    @apply min-h-[44px] gap-2 px-4 text-base;
+  }
+
+  /* Standalone text links keep a 44 px target */
+  .text-link {
+    @apply inline-flex min-h-[44px] items-center gap-2 font-semibold underline decoration-2 underline-offset-[6px] transition-colors duration-200;
+    text-decoration-color: var(--gold-deep);
+  }
+
+  .text-link:hover {
+    text-decoration-color: var(--navy);
+  }
+
+  .on-dark .text-link {
+    text-decoration-color: var(--gold);
+  }
+
+  .on-dark .text-link:hover {
+    @apply text-gold;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Header
+   ------------------------------------------------------------------ */
+.site-header {
+  background-color: var(--navy);
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 250ms ease-out,
+    border-color 250ms ease-out,
+    box-shadow 250ms ease-out;
+}
+
+.site-header.is-scrolled {
+  background-color: var(--navy-deep);
+  border-bottom-color: rgba(157, 178, 224, 0.28);
+  box-shadow: 0 6px 18px -12px rgba(14, 27, 59, 0.6);
+}
+
+.nav-link {
+  @apply relative inline-flex min-h-[44px] items-center whitespace-nowrap text-base leading-none text-paper;
+  font-stretch: 112%;
+  font-weight: 650;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  height: 3px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms var(--ease-out);
+}
+
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* Body scroll lock while the mobile menu is open */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------
+   Drafting details
+   ------------------------------------------------------------------ */
+
+/* Blueprint grid on navy: fine 24 px lines, stronger every 5th */
+.blueprint-grid {
+  background-color: var(--navy);
+  background-image:
+    linear-gradient(rgba(157, 178, 224, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(157, 178, 224, 0.13) 1px, transparent 1px),
+    linear-gradient(rgba(157, 178, 224, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(157, 178, 224, 0.06) 1px, transparent 1px);
+  background-size:
+    120px 120px,
+    120px 120px,
+    24px 24px,
+    24px 24px;
+  background-position: -1px -1px;
+}
+
+/* Squared drafting paper on light grounds */
+.drafting-paper {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(rgba(126, 139, 170, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(126, 139, 170, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+}
+
+/* The phone number painted big. Sized to its column (container query
+   units), so the twelve characters always fit on one line. */
+.phone-fit {
+  container-type: inline-size;
+}
+
+.phone-number {
+  font-size: 2.5rem;
+  font-size: clamp(1.75rem, 11.3cqi, 7rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+/* Dimension line: ticks at both ends, used as a section rule */
+.dimension {
+  position: relative;
+  height: 14px;
+}
+
+.dimension::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1.5px solid currentColor;
+}
+
+.dimension::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-left: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+}
+
+/* ------------------------------------------------------------------
+   Highlighter marks: a gold bar laid under key words, like a marker
+   on a plan. `.mark` sits behind navy text on light grounds; on navy
+   `.mark-under` stays below the letters so white type keeps contrast.
+   ------------------------------------------------------------------ */
+.mark,
+.mark-under {
+  position: relative;
+  z-index: 0;
+  white-space: nowrap;
+}
+
+.mark::after,
+.mark-under::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -0.06em;
+  right: -0.06em;
+  background: var(--gold);
+  transform-origin: left center;
+}
+
+.mark::after {
+  bottom: 0.04em;
+  height: 0.42em;
+}
+
+.mark-under::after {
+  bottom: -0.16em;
+  height: 0.14em;
+}
+
+/* For longer phrases that may wrap: a still marker band that follows every
+   line (navy text on light grounds only) */
+.mark-static {
+  background-image: linear-gradient(transparent 56%, var(--gold) 56%, var(--gold) 94%, transparent 94%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0 0.08em;
+}
+
+/* ------------------------------------------------------------------
+   The floor plan of services (home page)
+   Rooms sit in a navy grid; the gaps between them are the walls.
+   ------------------------------------------------------------------ */
+.plan {
+  display: grid;
+  gap: var(--wall);
+  padding: var(--wall);
+  background: var(--navy);
+}
+
+.plan-room {
+  position: relative;
+  background: var(--paper);
+}
+
+/* A door: a gap cut into one wall plus the swing drawn in plan line */
+.plan-door {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  color: var(--plan);
+  pointer-events: none;
+}
+
+.plan-door::before {
+  content: "";
+  position: absolute;
+  background: var(--paper);
+}
+
+.plan-door[data-wall="top"] {
+  top: 0;
+}
+
+.plan-door[data-wall="top"]::before {
+  top: calc(var(--wall) * -1);
+  left: 0;
+  width: 64px;
+  height: var(--wall);
+}
+
+.plan-door[data-wall="bottom"] {
+  bottom: 0;
+}
+
+.plan-door[data-wall="bottom"]::before {
+  bottom: calc(var(--wall) * -1);
+  left: 0;
+  width: 64px;
+  height: var(--wall);
+}
+
+/* ------------------------------------------------------------------
+   Motion 1: scroll reveals
+   Hidden state exists only under html.js (set by an inline script before
+   paint), so content is visible without JavaScript and when printed.
+   ------------------------------------------------------------------ */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 550ms var(--ease-out),
+    transform 550ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* Fade only: for anything that is, or wraps, a hash target */
+html.js .reveal.reveal-fade {
+  transform: none;
+}
+
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Motion 2 (the signature): the highlighter runs under the words once the
+   heading is in view. */
+html.js .reveal .mark::after,
+html.js .reveal .mark-under::after {
+  transform: scaleX(0);
+  transition: transform 600ms var(--ease-out) 220ms;
+}
+
+html.js .reveal.is-visible .mark::after,
+html.js .reveal.is-visible .mark-under::after {
+  transform: scaleX(1);
+}
+
+/* ------------------------------------------------------------------
+   Motion 3: on load, the hero copy rises, the marker runs and the rooms
+   of the house drawing appear one by one. Pure CSS: it needs no
+   JavaScript and never leaves content hidden.
+   ------------------------------------------------------------------ */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes mark-run {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes room-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 600ms var(--ease-out) both;
+    animation-delay: var(--rise-delay, 0ms);
+  }
+
+  .hero-mark::after {
+    animation: mark-run 650ms var(--ease-out) 450ms both;
+  }
+
+  .room-in {
+    animation: room-in 500ms var(--ease-out) both;
+    animation-delay: var(--room-delay, 0ms);
+  }
+}
+
+/* Reduced motion and print: every hidden state above is repeated here at
+   equal or higher specificity, later in the file, so nothing stays hidden. */
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal,
+  html.js .reveal.reveal-fade,
+  html.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html.js .reveal .mark::after,
+  html.js .reveal .mark-under::after,
+  html.js .reveal.is-visible .mark::after,
+  html.js .reveal.is-visible .mark-under::after {
+    transform: none;
+    transition: none;
+  }
+
+  .nav-link::after,
+  .site-header {
+    transition: none;
+  }
+}
+
+@media print {
+  html.js .reveal,
+  html.js .reveal.reveal-fade,
+  html.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html.js .reveal .mark::after,
+  html.js .reveal .mark-under::after,
+  html.js .reveal.is-visible .mark::after,
+  html.js .reveal.is-visible .mark-under::after {
+    transform: none;
+    transition: none;
+  }
+
+  .rise,
+  .hero-mark::after,
+  .room-in {
+    animation: none;
+  }
+
+  .site-header {
+    position: static;
+  }
 }

@@ -1,21 +1,107 @@
-import Link from "next/link"
+import Link from "next/link";
+import { ExternalLink } from "@/lib/components/external-link";
+import { ExternalArrow } from "@/lib/components/icons";
+import { Wordmark } from "@/lib/components/wordmark";
+import { mailingAddressLines, navLinks, serviceAreaSentence, servicesSentence, site, telHref } from "@/lib/site";
 
-export default function Footer() {
+const FOOTER_LINK = "inline-flex min-h-[44px] items-center gap-2 text-paper underline-offset-4 hover:text-gold hover:underline";
+
+/** "Cleaning, remodeling, painting and moving. Based in Brooklyn, working across ..." */
+function footerSummary(): string {
+  const parts = [`${servicesSentence.charAt(0).toUpperCase()}${servicesSentence.slice(1)}.`];
+  if (site.base && serviceAreaSentence) parts.push(`Based in ${site.base}, working across ${serviceAreaSentence}.`);
+  else if (site.base) parts.push(`Based in ${site.base}.`);
+  else if (serviceAreaSentence) parts.push(`Working across ${serviceAreaSentence}.`);
+  return parts.join(" ");
+}
+
+export function Footer() {
+  const year = new Date().getFullYear();
+  const phones = [site.phones.primary, site.phones.secondary].filter((phone) => phone !== null);
+
   return (
-    <footer className="border-t mt-16">
-      <div className="max-w-6xl mx-auto px-6 py-8 text-sm text-gray-500 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <div>© {new Date().getFullYear()} Business Name</div>
-          <Link
-            href="https://www.novusnyc.org/"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[#F6B78D] hover:text-[#F6B78D] hover:underline"
-          >
+    <footer className="on-dark bg-navy-deep text-paper">
+      {/* A gold rule, like the roof line in the hero drawing */}
+      <div className="h-2 bg-gold" aria-hidden="true" />
+      <div className="container-site grid gap-10 py-14 md:grid-cols-12 md:gap-8 md:py-16">
+        <div className="md:col-span-12 lg:col-span-4">
+          <Wordmark tone="dark" size="lg" />
+          <p className="display mt-6 text-display-sm text-paper">{site.tagline}</p>
+          <p className="measure-narrow mt-3 text-base text-blueprint">{footerSummary()}</p>
+        </div>
+
+        <nav aria-label="Footer" className="md:col-span-3 lg:col-span-2">
+          <h2 className="label text-blueprint">Pages</h2>
+          <ul className="mt-2">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className={FOOTER_LINK}>
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="grid gap-8 sm:grid-cols-2 md:col-span-9 md:gap-6 lg:col-span-6">
+          <div>
+            <h2 className="label text-blueprint">Call</h2>
+            <ul className="mt-2">
+              {phones.map((phone) => (
+                <li key={phone.e164}>
+                  <a href={telHref(phone)} className={`${FOOTER_LINK} whitespace-nowrap`}>
+                    <span className="sr-only">{phone.label}: </span>
+                    {phone.display}
+                  </a>
+                </li>
+              ))}
+              {site.email ? (
+                <li>
+                  <a href={`mailto:${site.email}`} className={FOOTER_LINK}>
+                    {site.email}
+                  </a>
+                </li>
+              ) : null}
+              <li>
+                <ExternalLink href={site.instagram.url} className={FOOTER_LINK}>
+                  <span className="whitespace-nowrap">Instagram {site.instagram.handle}</span>
+                  <ExternalArrow />
+                </ExternalLink>
+              </li>
+            </ul>
+          </div>
+
+          {mailingAddressLines ? (
+            <div>
+              <h2 className="label text-blueprint">Mailing address</h2>
+              <address className="mt-3 not-italic leading-relaxed text-paper">
+                {mailingAddressLines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </address>
+              <p className="mt-1 text-sm text-blueprint">For post only.</p>
+            </div>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="border-t border-blueprint/25">
+        <div className="container-site flex flex-col gap-1 py-4 text-base sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-blueprint">
+            © {year} {site.legalName}
+          </p>
+          {/* The link text must be exactly "Made by Novus", so the new-tab note
+              is attached with aria-describedby instead of sitting inside it. */}
+          <a href="https://novusnyc.org" target="_blank" rel="noreferrer" aria-describedby="novus-new-tab" className={FOOTER_LINK}>
             Made by Novus
-          </Link>
+          </a>
+          <span id="novus-new-tab" className="sr-only">
+            Opens in a new tab
+          </span>
         </div>
       </div>
     </footer>
-  )
+  );
 }
