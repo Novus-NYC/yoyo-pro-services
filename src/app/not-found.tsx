@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CallButton } from "@/lib/components/call-button";
+import { ArrowIcon } from "@/lib/components/icons";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -29,13 +30,14 @@ export default function NotFound() {
         <p className="measure mt-4 text-lead">
           That page is not here. It may have moved, or the link may be mistyped. These will get you back in.
         </p>
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
           <CallButton />
           <Link href="/" className="btn-ghost-dark">
             Back to home
           </Link>
-          <Link href="/services" className="btn-ghost-dark">
+          <Link href="/services" className="text-link">
             See the services
+            <ArrowIcon />
           </Link>
         </div>
       </div>

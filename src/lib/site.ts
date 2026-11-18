@@ -73,8 +73,11 @@ export const site = {
   tagline: "We take care of your space.",
   /** Their line "One Team. Multiple Solutions." */
   teamLine: "One team. Multiple solutions.",
-  /** From the Instagram bio and reel caption */
-  promise: "We turn ordinary spaces into extraordinary places.",
+  /** From the Instagram bio and reel caption ("At YOYO PRO SERVICES, we turn ...") */
+  promise: "we turn ordinary spaces into extraordinary places",
+  /** Adapted from the reel caption ("Whether you need a sparkling clean home, ...") */
+  pitch:
+    "Whether you need a sparkling clean home, a beautiful renovation, a fresh coat of paint or a stress-free move, it is one call.",
 
   owner: {
     name: "Ericson J. Ventura",

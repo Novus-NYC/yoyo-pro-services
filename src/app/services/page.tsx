@@ -29,8 +29,8 @@ export default function ServicesPage() {
             {capitalized}.
           </h1>
           <p className="rise measure mt-6 text-lead" style={rise(160)}>
-            Whether you need a sparkling clean home, a beautiful renovation, a fresh coat of paint or a stress-free move, it is
-            one team and one number.
+            Four trades under one name. Jump to the one you need, or call about the whole job: it is the same team and the
+            same number.
           </p>
 
           {/* In-page key: a short jump list to each service */}
@@ -63,7 +63,7 @@ export default function ServicesPage() {
             aria-labelledby={`${service.id}-heading`}
             className={`border-b border-rule ${flip ? "bg-paper-2" : "bg-white"}`}
           >
-            <div className="container-site grid items-center gap-8 py-14 md:grid-cols-12 md:gap-10 md:py-20">
+            <div className="container-site grid items-center gap-7 py-12 md:grid-cols-12 md:gap-10 md:py-16">
               <Reveal className={`md:col-span-5 ${flip ? "md:order-2" : ""}`}>
                 {/* A detail drawing: the glyph framed like a sheet, with a
                     dimension line along its foot */}
@@ -90,15 +90,14 @@ export default function ServicesPage() {
                 <p className="mt-4 text-display-sm" style={{ fontWeight: 650, fontStretch: "110%" }}>
                   <span className="mark-static">{service.tagline}</span>
                 </p>
-                <p className="measure mt-5 text-lead text-muted">Tell us about the job and we will talk it through.</p>
-                <CallButton className="mt-7" label={`Call about ${service.noun}`} />
+                <CallButton className="mt-8" label={`Call about ${service.noun}`} />
               </Reveal>
             </div>
           </section>
         );
       })}
 
-      <ClosingCall heading="Need more than one?" body="It is the same team and the same number. Tell us about the job and we will talk it through." />
+      <ClosingCall heading="Need more than one?" body="Tell us about the whole job and we will talk it through." />
     </>
   );
 }

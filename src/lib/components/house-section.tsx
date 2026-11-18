@@ -27,19 +27,20 @@ const fine = {
   vectorEffect: "non-scaling-stroke" as const,
 };
 
+// Sized so the labels stay about 11 px tall when the drawing is 340 px wide
 const labelStyle: CSSProperties = {
-  fontSize: 15,
+  fontSize: 17,
   fontWeight: 650,
   fontStretch: "85%",
-  letterSpacing: "1.8px",
+  letterSpacing: "1.4px",
 };
 
 /** Where each service's room sits in the drawing */
 const ROOMS: Record<ServiceId, { label: [number, number]; delay: number }> = {
-  painting: { label: [76, 240], delay: 150 },
-  cleaning: { label: [284, 240], delay: 280 },
-  moving: { label: [76, 348], delay: 410 },
-  remodeling: { label: [252, 348], delay: 540 },
+  painting: { label: [74, 238], delay: 150 },
+  cleaning: { label: [282, 238], delay: 280 },
+  moving: { label: [74, 346], delay: 410 },
+  remodeling: { label: [250, 346], delay: 540 },
 };
 
 function Sparkle({ x, y, size = 1 }: { x: number; y: number; size?: number }) {
@@ -100,7 +101,7 @@ export function HouseSection({ className = "" }: { className?: string }) {
 
       {/* Painting: a wall half done, the roller at its edge */}
       <Room id="painting">
-        <rect x="170" y="232" width="84" height="76" fill={GOLD} />
+        <rect x="178" y="232" width="78" height="76" fill={GOLD} />
         <g transform="translate(108 248) scale(1.3)">
           <ServiceGlyph id="painting" stroke={PAPER} accent={GOLD} strokeWidth={2.5} />
         </g>

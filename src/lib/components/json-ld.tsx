@@ -12,12 +12,13 @@ export function OrganizationJsonLd() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: site.name,
-    legalName: site.legalName,
     slogan: site.tagline,
     description: `${site.name}: ${servicesSentence}.`,
     telephone: site.phones.primary.e164,
     sameAs: [site.instagram.url],
-    founder: {
+    // "CEO" is the owner's own title. No source says he founded the company,
+    // so he is listed as an employee with that title, not as founder.
+    employee: {
       "@type": "Person",
       name: site.owner.name,
       jobTitle: site.owner.title,

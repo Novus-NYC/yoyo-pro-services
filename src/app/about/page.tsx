@@ -29,7 +29,10 @@ export default function AboutPage() {
     {
       label: "Phone",
       value: (
-        <a href={telHref(site.phones.primary)} className="underline decoration-gold-deep decoration-2 underline-offset-4 hover:decoration-navy">
+        <a
+          href={telHref(site.phones.primary)}
+          className="-my-2.5 inline-flex min-h-[44px] items-center underline decoration-gold-deep decoration-2 underline-offset-4 hover:decoration-navy"
+        >
           {site.phones.primary.display}
         </a>
       ),
@@ -48,8 +51,7 @@ export default function AboutPage() {
               <Marked text={site.teamLine} phrase="solutions." className="mark hero-mark" />
             </h1>
             <p className="rise measure mt-6 text-lead" style={{ "--rise-delay": "160ms" } as CSSProperties}>
-              At {site.name}, we turn ordinary spaces into extraordinary places, whether you need a clean home or a beautiful
-              renovation.
+              At {site.name}, {site.promise}, whether you need a clean home or a beautiful renovation.
             </p>
             <div className="rise mt-8" style={{ "--rise-delay": "240ms" } as CSSProperties}>
               <CallButton />
@@ -84,8 +86,8 @@ export default function AboutPage() {
           </Reveal>
           <Reveal className="md:col-span-7 md:pt-8" delay={100}>
             <p className="measure text-lead">
-              {site.owner.name} leads {site.name}
-              {site.owner.experience ? ` and says he brings ${site.owner.experience}` : ""}.
+              {site.owner.experience ? `${site.owner.name} brings ${site.owner.experience}. ` : ""}
+              He leads {site.name} as its {site.owner.title}.
             </p>
             <p className="measure mt-4 text-lead">
               The company keeps four trades under one name: {servicesSentence}. Whichever you need, the call goes to the same

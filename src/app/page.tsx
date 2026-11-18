@@ -61,7 +61,7 @@ export default function HomePage() {
           </div>
 
           <div className="lg:col-span-5">
-            <HouseSection className="mx-auto block w-full max-w-[300px] sm:max-w-[420px] lg:max-w-[520px]" />
+            <HouseSection className="mx-auto block w-full max-w-[340px] sm:max-w-[420px] lg:max-w-[520px]" />
           </div>
         </div>
       </section>
@@ -76,15 +76,12 @@ export default function HomePage() {
                 Four kinds of work. <span className="mark">One team.</span>
               </h2>
             </div>
-            <p className="text-lead md:col-span-5">
-              Whether you need a sparkling clean home, a beautiful renovation, a fresh coat of paint or a stress-free move, it is
-              one call.
-            </p>
+            <p className="text-lead md:col-span-5">{site.pitch}</p>
           </Reveal>
 
           <div className="plan mt-10 md:mt-14 md:grid-cols-2">
             {services.map((service, index) => (
-              <article key={service.id} className="plan-room" aria-labelledby={`room-${service.id}`}>
+              <article key={service.id} className="plan-room group" aria-labelledby={`room-${service.id}`}>
                 <PlanDoor {...DOORS[index]} />
                 {/* A room with its door in the bottom wall keeps clear space
                     above it, so the swing never runs into the text */}
@@ -96,7 +93,14 @@ export default function HomePage() {
                 >
                   <ServiceIcon id={service.id} className="h-14 w-14 text-navy md:h-16 md:w-16" />
                   <h3 id={`room-${service.id}`} className="display mt-6 text-display-md">
-                    {service.name}
+                    {/* The link's ::after stretches over the whole room */}
+                    <Link
+                      href={`/services#${service.id}`}
+                      className="inline-flex items-center gap-3 after:absolute after:inset-0 after:content-['']"
+                    >
+                      {service.name}
+                      <ArrowIcon className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none" />
+                    </Link>
                   </h3>
                   <p className="mt-2 text-lead text-muted">{service.tagline}</p>
                 </Reveal>
@@ -120,12 +124,12 @@ export default function HomePage() {
           <Reveal className="md:col-span-7">
             <p className="label text-muted">Who we are</p>
             <h2 id="who-heading" className="display mt-3 text-display-lg">
-              Led by {site.owner.name}
-              {site.base ? `, based in ${site.base}.` : "."}
+              Led by {site.owner.name}.
             </h2>
             <p className="measure mt-5 text-lead">
-              {site.owner.name}, {site.owner.title}, runs {site.name}. One team takes on {servicesSentence}, so a clean, a
-              repaint and a move can all start with the same number.
+              {site.owner.name}, {site.owner.title}, runs {site.name}
+              {site.base ? `, a company based in ${site.base}` : ""}. One team takes on {servicesSentence}, so a clean, a repaint
+              and a move can all start with the same number.
             </p>
             <Link href="/about" className="text-link mt-4">
               About {site.name}

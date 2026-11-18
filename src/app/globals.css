@@ -206,6 +206,25 @@ button:focus-visible,
   transform: scaleX(1);
 }
 
+/* No JavaScript: swap the menu toggle for a link to the footer pages */
+.nojs-menu-link {
+  display: none;
+}
+
+html:not(.js) .nojs-menu-link {
+  display: inline-flex;
+}
+
+html:not(.js) .menu-toggle {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  html:not(.js) .nojs-menu-link {
+    display: none;
+  }
+}
+
 /* Body scroll lock while the mobile menu is open */
 body.menu-open {
   overflow: hidden;
@@ -334,6 +353,13 @@ body.menu-open {
 .plan-room {
   position: relative;
   background: var(--paper);
+  transition: background-color 250ms ease-out;
+}
+
+/* Each room links to its service, so it lights up like a marked room */
+.plan-room:hover,
+.plan-room:focus-within {
+  background: var(--gold-tint);
 }
 
 /* A door: a gap cut into one wall plus the swing drawn in plan line */
@@ -480,6 +506,7 @@ html.js .reveal.is-visible .mark-under::after {
   }
 
   .nav-link::after,
+  .plan-room,
   .site-header {
     transition: none;
   }

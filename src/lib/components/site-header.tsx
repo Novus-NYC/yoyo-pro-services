@@ -18,6 +18,14 @@ export function SiteHeader() {
 
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  // Close the menu whenever the route changes, including browser Back and
+  // Forward. Adjusting state during render avoids an extra effect pass; the
+  // open effect's cleanup then gives the page back.
+  const [menuPath, setMenuPath] = useState(pathname);
+  if (menuPath !== pathname) {
+    setMenuPath(pathname);
+    if (open) setOpen(false);
+  }
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -134,10 +142,23 @@ export function SiteHeader() {
             <CallButton compact label="Call" className="min-[380px]:inline-flex hidden lg:hidden" />
             <CallButton compact className="hidden lg:inline-flex" />
 
+            {/* Without JavaScript the menu cannot open, so a plain link to the
+                footer's page list stands in for the toggle (see globals.css) */}
+            <a
+              href="#footer-nav"
+              className="nojs-menu-link h-11 w-11 items-center justify-center border-2 border-paper text-paper md:hidden"
+              style={{ borderRadius: 3 }}
+              aria-label="Pages, in the footer"
+            >
+              <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true" focusable="false">
+                <path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" />
+              </svg>
+            </a>
+
             <button
               ref={toggleRef}
               type="button"
-              className="inline-flex h-11 w-11 items-center justify-center border-2 border-paper text-paper md:hidden"
+              className="menu-toggle inline-flex h-11 w-11 items-center justify-center border-2 border-paper text-paper md:hidden"
               style={{ borderRadius: 3 }}
               aria-expanded={open}
               aria-controls={PANEL_ID}
@@ -193,7 +214,9 @@ export function SiteHeader() {
             <Link
               key={link.href}
               href={link.href}
-              onClick={() => close(false)}
+              // A link to the page already open does not navigate, so focus
+              // goes back to the toggle instead of being dropped.
+              onClick={() => close(link.href === pathname)}
               aria-current={isCurrent(link.href) ? "page" : undefined}
               className="group flex min-h-[64px] items-center justify-between gap-4 border-b border-blueprint/30 py-3"
             >
@@ -204,11 +227,12 @@ export function SiteHeader() {
         </nav>
 
         <div className="container-site shrink-0 pb-8">
-          <CallButton className="w-full" onClick={() => close(false)} />
+          {/* tel: links do not leave the page, so focus returns to the toggle */}
+          <CallButton className="w-full" onClick={() => close()} />
           <ul className="mt-3 flex flex-wrap gap-x-6">
             {secondary ? (
               <li>
-                <a href={telHref(secondary)} className="text-link" onClick={() => close(false)}>
+                <a href={telHref(secondary)} className="text-link" onClick={() => close()}>
                   <PhoneIcon className="h-[18px] w-[18px]" />
                   <span className="whitespace-nowrap">
                     {secondary.label} {secondary.display}

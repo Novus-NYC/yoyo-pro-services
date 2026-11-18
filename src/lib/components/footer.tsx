@@ -30,7 +30,7 @@ export function Footer() {
           <p className="measure-narrow mt-3 text-base text-blueprint">{footerSummary()}</p>
         </div>
 
-        <nav aria-label="Footer" className="md:col-span-3 lg:col-span-2">
+        <nav id="footer-nav" aria-label="Footer" className="md:col-span-3 lg:col-span-2">
           <h2 className="label text-blueprint">Pages</h2>
           <ul className="mt-2">
             {navLinks.map((link) => (
@@ -45,7 +45,7 @@ export function Footer() {
 
         <div className="grid gap-8 sm:grid-cols-2 md:col-span-9 md:gap-6 lg:col-span-6">
           <div>
-            <h2 className="label text-blueprint">Call</h2>
+            <h2 className="label text-blueprint">Contact</h2>
             <ul className="mt-2">
               {phones.map((phone) => (
                 <li key={phone.e164}>

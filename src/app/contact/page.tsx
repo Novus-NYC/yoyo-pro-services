@@ -1,19 +1,19 @@
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { ExternalLink } from "@/lib/components/external-link";
-import { ExternalArrow, PhoneIcon } from "@/lib/components/icons";
+import { ArrowIcon, ExternalArrow, PhoneIcon } from "@/lib/components/icons";
 import { Reveal } from "@/lib/components/reveal";
 import { ServiceIcon } from "@/lib/components/service-glyph";
 import { pageMetadata } from "@/lib/metadata";
-import { mailingAddressLines, serviceAreaSentence, services, site, telHref } from "@/lib/site";
+import { mailingAddressLines, serviceAreaSentence, services, servicesSentence, site, telHref } from "@/lib/site";
 
 const secondary = site.phones.secondary;
 
 export const metadata = pageMetadata({
   title: "Contact",
-  description: `Call ${site.name} at ${site.phones.primary.display}${secondary ? ` or ${secondary.display}` : ""}, or find ${
-    site.instagram.handle
-  } on Instagram. Tell us about the job and we will talk it through.`,
+  description: `Call ${site.name} about ${servicesSentence.replace(/ and /, " or ")} at ${site.phones.primary.display}${
+    secondary ? ` or ${secondary.display}` : ""
+  }, or find ${site.instagram.handle} on Instagram.`,
   path: "/contact",
 });
 
@@ -147,13 +147,23 @@ export default function ContactPage() {
             </h2>
             <Link href="/services" className="text-link">
               See the services
+              <ArrowIcon />
             </Link>
           </Reveal>
           <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((service, index) => (
-              <Reveal as="li" key={service.id} delay={index * 80} className="border-t-2 border-navy pt-5">
+              <Reveal as="li" key={service.id} delay={index * 80} className="group relative border-t-2 border-navy pt-5">
                 <ServiceIcon id={service.id} className="h-12 w-12 text-navy" />
-                <p className="display mt-4 text-display-sm">{service.name}</p>
+                <p className="display mt-4 text-display-sm">
+                  {/* The link's ::after covers the whole item */}
+                  <Link
+                    href={`/services#${service.id}`}
+                    className="inline-flex min-h-[44px] items-center gap-2 underline-offset-4 after:absolute after:inset-0 after:content-[''] group-hover:underline"
+                  >
+                    {service.name}
+                    <ArrowIcon className="h-4 w-4" />
+                  </Link>
+                </p>
                 <p className="mt-1 text-muted">{service.tagline}</p>
               </Reveal>
             ))}
