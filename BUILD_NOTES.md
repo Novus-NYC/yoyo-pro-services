@@ -12,7 +12,7 @@ Routes: `/` Home, `/about`, `/services`, `/contact`, plus a server-rendered 404.
 - **Home:** the four services as a floor plan (rooms with walls and door swings, each room linking to its service), then who and where, then the gold "van door" panel with the number painted big.
 - **About:** the company set out like the title block in the corner of a drawing sheet; the owner; the service area on blueprint; a key of the four trades.
 - **Services:** one band per service, each with a framed "detail drawing" and its own tagline and call button. An in-page key jumps to each band.
-- **Contact:** the number set huge in gold on navy, then a notes column (when you call, where we work, mailing address).
+- **Contact:** the number set huge in gold on navy (underlined at rest, under the label "Call"), then a notes column (when you call, where we work, mailing address).
 
 ### Palette (tokens in `tailwind.config.ts` and `globals.css`)
 
@@ -42,7 +42,7 @@ One family, **Archivo** (variable, self-hosted with `@fontsource-variable/archiv
 The Open Graph image uses static Archivo 600 and 800 from `@fontsource/archivo` (Satori cannot read variable WOFF2).
 
 ### Motion
-- Scroll reveals (`.reveal`): 550 ms fade and 16 px rise, hidden only under `html.js`.
+- Scroll reveals (`.reveal`): 550 ms fade and 16 px rise, hidden only under `html.js`. In the hairline grids (About service area and trades, Contact notes, the home plan) the cells keep their fill at rest and only their contents reveal, so the 1 px dividers never show as a solid navy or blueprint slab mid-fade. The Contact notes reveal the `dt` and `dd` themselves, so the list stays `dl > div > dt, dd`.
 - Signature: a gold highlighter runs under key words when their heading enters view (`transform: scaleX`), and on load in the hero.
 - Hero: copy rises once on load; the four rooms of the house drawing fade in one after another (pure CSS).
 - Plan rooms tint gold on hover and focus.
@@ -64,9 +64,9 @@ All business facts live in `src/lib/site.ts`. Unknowns are `null` and their UI r
 | Services | Cleaning, Remodeling, Painting, Moving | Reel caption and flyers |
 | Service area | New York City, New Jersey and Pennsylvania | Instagram bio hashtags (#nyc #NJ #PA) |
 | Base | Based in Brooklyn | Registry county (Kings); caption hashtag BrooklynNY |
-| Phone | 929-606-6927 (primary CTA), 929-852-8456 ("Second line") | Reel caption and both flyers |
+| Phone | 929-606-6927 (primary CTA, labelled "Call"), 929-852-8456 ("Second line") | Reel caption and both flyers |
 | Instagram | https://www.instagram.com/yoyoproservices/ (@yoyoproservices) | Owner's message |
-| Mailing address | 169 Madison Ave, Suite 66927, New York, NY 10016, labelled "Mailing address" and "For post only" | Printed on both flyers as "Our Address" |
+| Mailing address | 169 Madison Ave, Suite 66927, New York, NY 10016, labelled "Mailing address" and "For mail only." (one string, `site.mailingAddressNote`, used in the footer and on Contact) | Printed on both flyers as "Our Address" |
 
 ### The four taglines (confirm with owner)
 
@@ -84,7 +84,7 @@ No scope, bullet lists, prices or process steps are written for any service. Eac
 Lead decisions (2026-11-17), followed as written:
 - Type-led design with drawn motifs; no images from Instagram at all (the AI flyers, the reel frames and the 150 px badge are excluded). The logo is not recreated or traced: the wordmark is set in Archivo ("YOYO" in paper or navy, "PRO" in navy on a gold block as a colour nod, "Services" as a label), and the favicon is a drawn "YP" monogram.
 - Services page uses only the four taglines (above). The 15% first-service promo is left off.
-- Primary CTA everywhere: **Call 929-606-6927** (`tel:+19296066927`). 929-852-8456 is listed as "Second line". Instagram link has no tracking parameters.
+- Primary CTA everywhere: **Call 929-606-6927** (`tel:+19296066927`). 929-852-8456 is listed as "Second line", with that label visible wherever it appears (footer included). Instagram link has no tracking parameters.
 - No email, form, hours or booking link (all `null`).
 - Mailing address shown as a mailing address only: no map, no directions, no "visit us", no geo, not in structured data. The Brooklyn operations address and the EIN appear nowhere.
 - No "licensed", "insured", "certified", reviews, ratings or testimonials. The flyer trust row ("Trusted Professionals", "On Time, Every Time") is not used.
@@ -96,7 +96,10 @@ Build decisions:
 - **No redirects:** yoyoproservices.com is not registered, so there is no old site.
 - **Site URL** comes from `NEXT_PUBLIC_SITE_URL`, then `VERCEL_PROJECT_PRODUCTION_URL`, then `http://localhost:3000`. robots.txt only advertises the sitemap when a public URL is set.
 - **Without JavaScript** the mobile menu cannot open, so a link to the footer's page list replaces the toggle (CSS under `html:not(.js)`).
-- **The big phone number** is sized with container query units so its twelve characters always fit their column on one line.
+- **The big phone number** is sized with container query units so its twelve characters always fit their column on one line. It keeps a 44 px minimum box and a resting underline at every size.
+- **The call is always in the header:** an icon-only 44 x 44 px gold square below 380 px (accessible name "Call 929-606-6927"), "Call" from 380 px, the full number from 1024 px.
+- **Narrow phones (320 to 359 px):** the footer wordmark steps down a size below 640 px, and the header wordmark drops its visible "Services" label below 360 px (it stays in the accessible name) to make room for the call square. The Services jump list is one column below 360 px.
+- **Grids that stay stacked longer:** the About service-area tiles go three across only from 1024 px and the About trades four across only from 1280 px ("Pennsylvania" and "Remodeling" in the display face are wider than a narrower cell); the Contact notes go three across from 1024 px; the footer's brand column spans the full row until 1280 px; the home "What we do" intro stays stacked until 1024 px so the heading always leads its paragraph.
 
 ## Contrast (WCAG 2.x)
 
@@ -123,7 +126,7 @@ Build decisions:
 | gold on paper | 1.62 | **never text**; gold buttons on paper carry a navy 2 px edge |
 | plan on paper | 3.13 | door swings and dimension lines (non-text graphics) |
 
-Focus rings: 3 px navy on light grounds (13.55), 3 px gold on navy (8.35), navy on gold (8.35). Every control is at least 44 px tall.
+Focus rings: 3 px navy on light grounds (13.55), 3 px gold on navy (8.35), navy on gold (8.35). Every control is at least 44 px tall, including the big tap-to-call number (measured 44 px at 320 to 390 px, larger above).
 
 ## Images
 
@@ -140,7 +143,7 @@ Excluded on purpose (lead decision): the Instagram post flyer (1440 px, AI-gener
 
 - `npm run build`, `npm run lint`, `npm run typecheck`: pass with no errors or warnings.
 - Production build on port 3022, screenshots of every route at 1440, 768 and 390 (Playwright).
-- No horizontal overflow at 360, 375, 380, 390, 414, 600, 767, 768, 900, 1023, 1024, 1280 and 1440 on any route.
+- No horizontal overflow at 320, 340, 359, 360, 375, 379, 380, 390, 414, 600, 640, 700, 740, 767, 768, 900, 1023, 1024, 1100, 1279, 1280 and 1440 on any route (page width and every link, list item, `dt` and `dd` checked for content running out of its box).
 - Mobile hero at 390 x 844: name, what it does and the call button all sit above the fold (button bottom at 445 px); hero block 816 px tall.
 - Mobile menu: dialog is a sibling of the header; everything outside is inert while open; focus moves to Close; Tab and Shift+Tab stay inside; Escape closes and returns focus to the toggle; closes at the desktop breakpoint, on route change and on browser Back.
 - JavaScript off and reduced motion: no `.reveal` content stays hidden. Anchor jumps land exactly under the header.
@@ -148,7 +151,7 @@ Excluded on purpose (lead decision): the Instagram post flyer (1440 px, AI-gener
 
 ## Open items for the client
 
-1. **Services:** confirm the four taglines above, and what each service covers: residential or commercial; which kinds of cleaning; how big a remodel; interior or exterior painting; local or long-distance moves, and whether a truck is provided. Once confirmed, each service band can take a short scope list.
+1. **Services:** confirm the four taglines above, and what each service covers: residential or commercial; which kinds of cleaning; how big a remodel; interior or exterior painting; local or long-distance moves, and whether a truck is provided. Once confirmed, each service band can take a short scope list, and the home page's neutral "See the services" link can say more.
 2. **Service area:** is "New York City, New Jersey and Pennsylvania" accurate? Which boroughs or areas?
 3. **"Based in Brooklyn":** happy with that wording on the site?
 4. **Phones:** which number is the main line? Does either take texts or WhatsApp? Should both be listed?
