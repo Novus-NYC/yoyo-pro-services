@@ -266,12 +266,27 @@ body.menu-open {
   container-type: inline-size;
 }
 
+/* It is the site's main call link, so it keeps a 44 px tap target at every
+   size and is underlined at rest (the hover thickens the rule). */
 .phone-number {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   font-size: 2.5rem;
   font-size: clamp(1.75rem, 11.3cqi, 7rem);
   line-height: 1;
   letter-spacing: -0.03em;
   white-space: nowrap;
+  text-decoration-line: underline;
+  text-decoration-thickness: max(3px, 0.04em);
+  text-underline-offset: max(6px, 0.1em);
+  transition:
+    color 200ms ease-out,
+    text-decoration-thickness 200ms ease-out;
+}
+
+.phone-number:hover {
+  text-decoration-thickness: max(5px, 0.07em);
 }
 
 /* Dimension line: ticks at both ends, used as a section rule */
@@ -507,6 +522,7 @@ html.js .reveal.is-visible .mark-under::after {
 
   .nav-link::after,
   .plan-room,
+  .phone-number,
   .site-header {
     transition: none;
   }

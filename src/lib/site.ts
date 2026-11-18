@@ -61,7 +61,7 @@ export type NavLink = { href: string; label: string };
 /* ------------------------------------------------------------------
    Business facts
    ------------------------------------------------------------------ */
-const primaryPhone: Phone = { display: "929-606-6927", e164: "+19296066927", label: "Phone" };
+const primaryPhone: Phone = { display: "929-606-6927", e164: "+19296066927", label: "Call" };
 const secondaryPhone: Phone = { display: "929-852-8456", e164: "+19298528456", label: "Second line" };
 
 export const site = {
@@ -116,6 +116,8 @@ export const site = {
     region: "NY",
     postalCode: "10016",
   } as { street: string; suite: string; locality: string; region: string; postalCode: string } | null,
+  /** Shown under the mailing address wherever it appears: it is not a place to visit */
+  mailingAddressNote: "For mail only.",
 
   // Not published anywhere. Keep null until the owner confirms them.
   email: null as string | null,

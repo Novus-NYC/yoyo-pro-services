@@ -31,8 +31,8 @@ export function ClosingCall({ heading, body = "Tell us about the job and we will
 
         <Reveal className="phone-fit lg:col-span-7" delay={120}>
           <div className="dimension text-navy" aria-hidden="true" />
-          <p className="label mt-3">Call</p>
-          <a href={telHref(primary)} className="phone-number display mt-1 inline-block decoration-4 underline-offset-[10px] hover:underline">
+          <p className="label mt-3">{primary.label}</p>
+          <a href={telHref(primary)} className="phone-number display mt-1 decoration-navy">
             {primary.display}
           </a>
           <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-1">

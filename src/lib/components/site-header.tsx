@@ -138,8 +138,10 @@ export function SiteHeader() {
               ))}
             </nav>
 
-            {/* Short label on phones, the full number from the tablet up */}
-            <CallButton compact label="Call" className="min-[380px]:inline-flex hidden lg:hidden" />
+            {/* The call is always in the header: an icon square on the
+                narrowest phones, "Call" from 380 px, the full number from lg */}
+            <CallButton iconOnly className="min-[380px]:hidden" />
+            <CallButton compact label="Call" className="hidden min-[380px]:inline-flex lg:hidden" />
             <CallButton compact className="hidden lg:inline-flex" />
 
             {/* Without JavaScript the menu cannot open, so a plain link to the
