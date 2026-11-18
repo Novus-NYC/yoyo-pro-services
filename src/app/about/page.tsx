@@ -114,11 +114,17 @@ export default function AboutPage() {
               </h2>
               <p className="label mt-8 text-blueprint">Working across</p>
             </Reveal>
-            <ol className="mt-3 grid gap-px border-2 border-blueprint/40 bg-blueprint/40 sm:grid-cols-3">
+            {/* Stacked until lg: "Pennsylvania" in the display face is wider
+                than a third of the container below that. The tiles keep their
+                fill and only the names reveal, so the hairline dividers never
+                show as a solid slab mid-fade. */}
+            <ol className="mt-3 grid gap-px border-2 border-blueprint/40 bg-blueprint/40 lg:grid-cols-3">
               {site.serviceArea?.map((area, index) => (
-                <Reveal as="li" key={area} delay={index * 90} className="bg-navy px-5 py-6 md:px-6 md:py-8">
-                  <span className="display block text-display-md">{area}</span>
-                </Reveal>
+                <li key={area} className="min-w-0 bg-navy px-5 py-6 md:px-6 md:py-8">
+                  <Reveal delay={index * 90}>
+                    <span className="display block text-display-md">{area}</span>
+                  </Reveal>
+                </li>
               ))}
             </ol>
             <p className="measure mt-6 text-base text-blueprint">Not sure we cover your street? Ask when you call.</p>
@@ -138,14 +144,23 @@ export default function AboutPage() {
               <ArrowIcon />
             </Link>
           </Reveal>
-          <ul className="mt-8 grid gap-px border-2 border-navy bg-navy sm:grid-cols-2 lg:grid-cols-4">
+          {/* 2-up until xl: four across at lg leaves "Remodeling" wider than
+              its cell (it crossed the edge at 1024) */}
+          <ul className="mt-8 grid gap-px border-2 border-navy bg-navy sm:grid-cols-2 xl:grid-cols-4">
+            {/* The cell keeps its paper fill (so the navy hairlines stay
+                hairlines); only its contents reveal, as on the home plan */}
             {services.map((service, index) => (
-              <Reveal as="li" key={service.id} delay={index * 80} className="bg-paper">
-                <Link href={`/services#${service.id}`} className="group flex h-full min-h-[44px] items-center gap-4 p-5 transition-colors hover:bg-gold-tint">
-                  <ServiceIcon id={service.id} className="h-12 w-12 shrink-0 text-navy" />
-                  <span className="display text-display-sm">{service.name}</span>
+              <li key={service.id} className="bg-paper">
+                <Link
+                  href={`/services#${service.id}`}
+                  className="flex h-full min-h-[44px] items-center p-5 transition-colors hover:bg-gold-tint"
+                >
+                  <Reveal delay={index * 80} className="flex items-center gap-4">
+                    <ServiceIcon id={service.id} className="h-12 w-12 shrink-0 text-navy" />
+                    <span className="display text-display-sm">{service.name}</span>
+                  </Reveal>
                 </Link>
-              </Reveal>
+              </li>
             ))}
           </ul>
         </div>

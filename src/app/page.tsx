@@ -69,14 +69,15 @@ export default function HomePage() {
       {/* The services as a floor plan: one room each */}
       <section className="drafting-paper" aria-labelledby="plan-heading">
         <div className="container-site py-16 md:py-24">
-          <Reveal className="grid gap-5 md:grid-cols-12 md:items-end md:gap-8">
-            <div className="md:col-span-7">
+          {/* Stacked until lg, so the heading always leads its paragraph */}
+          <Reveal className="grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-8">
+            <div className="lg:col-span-7">
               <p className="label text-muted">What we do</p>
               <h2 id="plan-heading" className="display mt-3 text-display-lg">
                 Four kinds of work. <span className="mark">One team.</span>
               </h2>
             </div>
-            <p className="text-lead md:col-span-5">{site.pitch}</p>
+            <p className="measure text-lead lg:col-span-5">{site.pitch}</p>
           </Reveal>
 
           <div className="plan mt-10 md:mt-14 md:grid-cols-2">
@@ -111,7 +112,7 @@ export default function HomePage() {
           <Reveal className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
             <CallButton />
             <Link href="/services" className="text-link">
-              More on each service
+              See the services
               <ArrowIcon />
             </Link>
           </Reveal>

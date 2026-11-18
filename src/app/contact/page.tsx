@@ -21,8 +21,12 @@ const rise = (ms: number) => ({ "--rise-delay": `${ms}ms` }) as CSSProperties;
 
 type Note = { label: string; body: ReactNode };
 
-/** Written out in full so Tailwind can see the class names */
-const NOTE_COLUMNS: Record<number, string> = { 1: "", 2: "md:grid-cols-2", 3: "md:grid-cols-3" };
+/**
+ * Written out in full so Tailwind can see the class names. Three notes stay
+ * stacked until lg: at tablet width a third of the row is too narrow for the
+ * address lines, and a 2-up grid would leave an empty cell.
+ */
+const NOTE_COLUMNS: Record<number, string> = { 1: "", 2: "md:grid-cols-2", 3: "lg:grid-cols-3" };
 
 export default function ContactPage() {
   const primary = site.phones.primary;
@@ -64,12 +68,12 @@ export default function ContactPage() {
               <>
                 <address className="not-italic">
                   {mailingAddressLines.map((line) => (
-                    <span key={line} className="block">
+                    <span key={line} className="block whitespace-nowrap">
                       {line}
                     </span>
                   ))}
                 </address>
-                <p className="mt-2 text-base text-muted">For post only.</p>
+                <p className="mt-2 text-base text-muted">{site.mailingAddressNote}</p>
               </>
             ),
           },
@@ -90,10 +94,9 @@ export default function ContactPage() {
           <div className="phone-fit rise mt-10 max-w-[60rem]" style={rise(160)}>
             <div className="dimension text-blueprint" aria-hidden="true" />
             <p className="label mt-3 text-blueprint">{primary.label}</p>
-            <a
-              href={telHref(primary)}
-              className="phone-number display mt-2 inline-block text-gold decoration-4 underline-offset-[10px] hover:underline"
-            >
+            {/* Underlined at rest, like every other link here; the hover turns
+                the number paper and keeps the gold rule */}
+            <a href={telHref(primary)} className="phone-number display mt-2 text-gold decoration-gold hover:text-paper">
               {primary.display}
             </a>
           </div>
@@ -127,12 +130,19 @@ export default function ContactPage() {
               Good to know
             </h2>
           </Reveal>
+          {/* Each cell keeps its white fill at rest, so the navy hairlines
+              between them never show as a solid band; only the term and its
+              note reveal (dl > div > dt, dd stays valid) */}
           <dl className={`mt-8 grid gap-px border-2 border-navy bg-navy ${NOTE_COLUMNS[Math.min(notes.length, 3)]}`}>
             {notes.map((note, index) => (
-              <Reveal key={note.label} delay={index * 90} className="bg-white p-6 md:p-8">
-                <dt className="label text-muted">{note.label}</dt>
-                <dd className="mt-3 text-lead">{note.body}</dd>
-              </Reveal>
+              <div key={note.label} className="min-w-0 bg-white p-6 md:p-8">
+                <Reveal as="dt" delay={index * 90} className="label text-muted">
+                  {note.label}
+                </Reveal>
+                <Reveal as="dd" delay={index * 90 + 60} className="mt-3 text-lead">
+                  {note.body}
+                </Reveal>
+              </div>
             ))}
           </dl>
         </div>

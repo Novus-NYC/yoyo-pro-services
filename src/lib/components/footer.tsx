@@ -23,14 +23,17 @@ export function Footer() {
     <footer className="on-dark bg-navy-deep text-paper">
       {/* A gold rule, like the roof line in the hero drawing */}
       <div className="h-2 bg-gold" aria-hidden="true" />
-      <div className="container-site grid gap-10 py-14 md:grid-cols-12 md:gap-8 md:py-16">
-        <div className="md:col-span-12 lg:col-span-4">
+      {/* min-w-0 on every column, so no unbreakable line can widen a grid
+          track past the viewport. The brand column spans the full row until
+          xl: below that, a third of the row is narrower than the wordmark. */}
+      <div className="container-site grid gap-10 py-14 md:grid-cols-12 md:gap-8 md:py-16 [&>*]:min-w-0">
+        <div className="md:col-span-12 xl:col-span-4">
           <Wordmark tone="dark" size="lg" />
           <p className="display mt-6 text-display-sm text-paper">{site.tagline}</p>
           <p className="measure-narrow mt-3 text-base text-blueprint">{footerSummary()}</p>
         </div>
 
-        <nav id="footer-nav" aria-label="Footer" className="md:col-span-3 lg:col-span-2">
+        <nav id="footer-nav" aria-label="Footer" className="md:col-span-3 xl:col-span-2">
           <h2 className="label text-blueprint">Pages</h2>
           <ul className="mt-2">
             {navLinks.map((link) => (
@@ -43,15 +46,18 @@ export function Footer() {
           </ul>
         </nav>
 
-        <div className="grid gap-8 sm:grid-cols-2 md:col-span-9 md:gap-6 lg:col-span-6">
+        {/* The contact column takes the width of its longest link (the
+            Instagram handle); the mailing address takes the rest */}
+        <div className="grid gap-8 sm:grid-cols-[auto_minmax(0,1fr)] md:col-span-9 md:gap-6 xl:col-span-6">
           <div>
             <h2 className="label text-blueprint">Contact</h2>
             <ul className="mt-2">
               {phones.map((phone) => (
                 <li key={phone.e164}>
+                  {/* Visible role labels, as on Contact and the closing panel:
+                      "Call 929-606-6927", "Second line 929-852-8456" */}
                   <a href={telHref(phone)} className={`${FOOTER_LINK} whitespace-nowrap`}>
-                    <span className="sr-only">{phone.label}: </span>
-                    {phone.display}
+                    {phone.label} {phone.display}
                   </a>
                 </li>
               ))}
@@ -81,7 +87,7 @@ export function Footer() {
                   </span>
                 ))}
               </address>
-              <p className="mt-1 text-sm text-blueprint">For post only.</p>
+              <p className="mt-1 text-sm text-blueprint">{site.mailingAddressNote}</p>
             </div>
           ) : null}
         </div>

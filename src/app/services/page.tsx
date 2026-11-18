@@ -35,12 +35,13 @@ export default function ServicesPage() {
 
           {/* In-page key: a short jump list to each service */}
           <nav aria-label="Services on this page" className="rise mt-10" style={rise(240)}>
-            <ul className="grid grid-cols-2 gap-px border-2 border-navy bg-navy md:grid-cols-4">
+            {/* One column below 360 px, where two cells cannot hold "Remodeling" */}
+            <ul className="grid grid-cols-1 gap-px border-2 border-navy bg-navy min-[360px]:grid-cols-2 md:grid-cols-4">
               {services.map((service) => (
-                <li key={service.id} className="bg-paper">
+                <li key={service.id} className="min-w-0 bg-paper">
                   <a
                     href={`#${service.id}`}
-                    className="flex min-h-[56px] items-center gap-3 px-4 py-3 font-semibold transition-colors hover:bg-gold-tint"
+                    className="flex min-h-[56px] items-center gap-3 px-3 py-3 font-semibold transition-colors hover:bg-gold-tint sm:px-4"
                   >
                     <ServiceIcon id={service.id} className="h-8 w-8 shrink-0 text-navy" />
                     {service.name}
